@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_HOST=${DB_ROOT_HOST}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./db/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+  express:
+    build: express/.
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - TZ=${TZ}
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./express:/app
+    working_dir: /app
+    command: npm run dev
+    depends_on:
+      - db
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=${DB_USER}
+      - PMA_PASSWORD=${DB_PASS}
