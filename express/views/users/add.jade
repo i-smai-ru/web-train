@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  h1 #{title}
+  div(role="main")
+    ol.text-danger
+      - if(err!=null) { for (let i in err.errors) { 
+        li #{err.errors[i].message}
+      - }}
+    form(method='post', action='/users/add')
+      div.form-group
+        label(for='name') Name:
+        input#name.form-control(type='text', name='name', value=user.name)
+        ul.text-danger
+          - if(err!=null) { for (let i in err.get("name")) { 
+            li #{err.get("name")[i].message}
+          - }}
+      div.form-group
+        label(for='pass') Password:
+        input#pass.form-control(type='password', name='pass')
+        ul.text-danger
+          - if(err!=null) { for (let i in err.get("pass")) { 
+            li #{err.get("pass")[i].message}
+          - }}
+      div.form-group
+        label(for='mail') Email:
+        input#mail.form-control(type='email', name='mail', value=user.mail)
+        ul.text-danger
+          - if(err!=null) { for (let i in err.get("mail")) { 
+            li #{err.get("mail")[i].message}
+          - }}
+      div.form-group
+        label(for='age') Age:
+        input#age.form-control(type='number', name='age', value=user.age)
+        ul.text-danger
+          - if(err!=null) { for (let i in err.get("age")) { 
+            li #{err.get("age")[i].message}
+          - }}
+      input.btn.btn-primary(type='submit', value='作成')
